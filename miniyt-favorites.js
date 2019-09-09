@@ -47,7 +47,7 @@ function createFavoritesList(name) {
     let option = document.createElement("option");
     option.innerText = option.value = name;
     ytFavoritesList.appendChild(option);
-    favorites[name] = tracks;
+    favorites[name] = [];
     saveFavorites();
 }
 function selectFavoritesList(name) {
