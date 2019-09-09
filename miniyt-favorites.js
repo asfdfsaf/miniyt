@@ -98,3 +98,13 @@ function removeFavorite(entry) {
         }
     }
 }
+function sortFavorites() {
+    let name = ytFavoritesInput.value;
+    if (name == "") {
+        return;
+    }
+    sorted = favorites[name].sort((a,b) => -a.title.localeCompare(b.title))
+    favorites[name] = sorted;
+    selectFavoritesList(name);
+    saveFavorites();
+}

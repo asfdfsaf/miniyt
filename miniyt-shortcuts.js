@@ -102,6 +102,7 @@ document.onkeypress = function(e) {
         case "w".charCodeAt(0): increaseBrightness(); break;
         case "s".charCodeAt(0): decreaseBrightness(); break;
         case "t".charCodeAt(0): deleteCurrentFavoriteList(); break;
+        case "z".charCodeAt(0): sortFavorites(); break;
         case "u".charCodeAt(0): ytFavoritesInput.value = ""; ytFavoritesInput.focus(); break;
     }
     return false;
