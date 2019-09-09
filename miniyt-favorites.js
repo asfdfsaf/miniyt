@@ -4,9 +4,11 @@ function loadFavorites() {
     if (window.localStorage['favorites'] == undefined) {
         window.localStorage['favorites'] = "{}";
     }
-    let favorites = JSON.parse(window.localStorage['favorites']);
+    favorites = JSON.parse(window.localStorage['favorites']);
     for (let f in favorites) {
-        createFavoritesList(f, favorites[f]);
+        let option = document.createElement("option");
+        option.innerText = option.value = f;
+        ytFavoritesList.appendChild(option);
     }
 }
 function saveFavorites() {
@@ -36,7 +38,7 @@ function addToCurrentFavoriteList(title, vid) {
         selectFavoritesList(name);
     }
 }
-function createFavoritesList(name, tracks=[]) {
+function createFavoritesList(name) {
     console.log(`Create favorites list: ${name}.`);
     if (name in favorites) {
         console.log("Playlist already exists.");
