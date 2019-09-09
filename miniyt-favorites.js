@@ -61,6 +61,9 @@ function selectFavoritesList(name) {
 }
 function deleteCurrentFavoriteList() {
     let name = ytFavoritesInput.value;
+    if (name == "") {
+        return;
+    }
     console.log(`Deleting list ${name}.`);
     let option = ytFavoritesList.querySelector(`option[value=${name}]`);
     if (option != undefined) {
@@ -69,9 +72,15 @@ function deleteCurrentFavoriteList() {
     }
     delete favorites[name];
     saveFavorites();
+    
     let next = Object.keys(favorites)[0];
     ytFavoritesInput.value = next;
-    selectFavoritesList(next);
+    if (next != "") {
+        selectFavoritesList(next);
+    } else {
+        playlist = [];
+        renderPlaylist();
+    }
 }
 function removeFavorite(entry) {
     console.log("Removing favorite.");
