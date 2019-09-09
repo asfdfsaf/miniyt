@@ -91,7 +91,11 @@ function addVideoToView(view, vid, title, thumb, prepend) {
         }
         addRelatedVideos(vid);
         ei.onclick = function() {
-            queueVideo(vid, title);
+            if (ytFavoritesInput.value != "") {
+                addToCurrentFavoriteList(title, vid);
+            } else {
+                queueVideo(vid, title);
+            }
         };
         ea.setAttribute("class", "yt-video-link-added");
     };

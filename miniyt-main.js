@@ -69,7 +69,7 @@ function configure() {
     apiKey = "AIzaSyDaPnpShE8nxyGs-QjX55r5qREcQhub-j8";
     videosPerSearch = 300;
     videosPerRelated = 200;
-    document.title = "MiniYT 1.1";
+    document.title = "MiniYT 1.2";
 }
 document.body.onload = function() {
     configure();
