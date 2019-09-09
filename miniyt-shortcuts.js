@@ -46,6 +46,13 @@ function decreaseSaturation() {
 function updateFilters() {
     player.a.style.filter = `saturate(${saturation}%) brightness(${brightness}%)`;
 }
+function playNextVideoContext() {
+    if (ytFavoritesInput.value == "") {
+        dequeueVideo(); 
+    } else {
+        playNextVideo();
+    }
+}
 
 document.onkeypress = function(e) {
     if (document.activeElement === ytSearch ||
@@ -54,13 +61,7 @@ document.onkeypress = function(e) {
     }
     switch(e.which || e.keyCode) {
         case "\\".charCodeAt(0): dequeueVideo(); break;
-        case "n".charCodeAt(0): 
-            if (ytFavoritesInput.value == "") {
-                dequeueVideo(); 
-            } else {
-                playNextVideo();
-            }
-            break;
+        case "n".charCodeAt(0): playNextVideoContext(); break;
         case "f".charCodeAt(0): toggleFullscreen(); break;
         case "/".charCodeAt(0): ytSearch.focus(); break;
         case "[".charCodeAt(0): seekToOffset(-10.0); break;

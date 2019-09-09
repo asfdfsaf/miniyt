@@ -31,9 +31,6 @@ function renderPlaylist() {
                 renderPlaylist();
             }
         };
-        if (playlist[i].isFavorite == true) {
-            p.style.color = "red";
-        }
         p.setAttribute("class", "yt-playlistentry");
         let prefix = "";
         if (i == playIndex) {
