@@ -76,6 +76,9 @@
     padding-right: 15px;
     width: 100%;
 }
+.yt-playlistentry {
+    cursor: pointer;
+}
 .yt-panel {
     display: flex;
     flex-flow: column;
@@ -97,6 +100,7 @@
 }
 .yt-playing {
     animation: fadein 2s ease-out;
+    cursor: pointer;
 }
 a {
     text-decoration: none;
@@ -411,6 +415,28 @@ body {
         ytPlaylist.innerHTML = "";
         for (let i = playlist.length - 1; i >= 0; i--) {
             let p = document.createElement("p");
+            p.onclick = function(e) {
+                console.log('Remove track '+i);
+                if (playlist[i].isFavorite == true) {
+                    removeFavorite(playlist[i]);
+                    if (playlist.length - 1 == i) {
+                        dequeueVideo();
+                    }
+                    playlist.splice(i, 1);
+                    renderPlaylist();
+                    return;
+                }
+                if (playlist.length - 1 == i) {
+                    dequeueVideo();
+                } else {
+                    playlist.splice(i, 1);
+                    renderPlaylist();
+                }                
+            };
+            if (playlist[i].isFavorite == true) {
+                p.style.color = "green";
+            }
+            p.setAttribute("class", "yt-playlistentry");
             let prefix = "";
             if (i == playlist.length - 1) {
                 prefix = "&#x25b6; ";
@@ -420,14 +446,15 @@ body {
             p.innerHTML = prefix + playlist[i]["title"];
         }
     }
-    function queueVideo(vid, title) {
+    function queueVideo(vid, title, isFavorite=false) {
         if (playlist.length > 0) {
             playlist[playlist.length - 1]["time"] = player.getCurrentTime();
         }
         playlist.push({
             vid: vid,
             title: title,
-            time: 0
+            time: 0,
+            isFavorite: isFavorite
         });
         renderPlaylist();
         window.location.hash = "#" + vid;
@@ -587,7 +614,7 @@ body {
     }
     function addFavoritesToList(favorites) {
         for (let f in favorites) {
-            let option = document.createElement('option');
+            let option = document.createElement("option");
             option.innerText = option.value = f['name'];
             ytFavoritesSelect.appendChild(option);
         }
@@ -615,7 +642,7 @@ body {
             console.log("Playlist already exists.");
             return;
         }
-        let option = document.createElement('option');
+        let option = document.createElement("option");
         option.innerText = option.value = name;
         ytFavoritesList.appendChild(option);
         favorites[name] = tracks;
@@ -627,7 +654,7 @@ body {
         for (let v in favorites[name]) {
             let e = favorites[name][v];
             console.log(`Adding track: ${e["vid"]} ${e["title"]}.`);
-            queueVideo(e["vid"], e["title"]);
+            queueVideo(e["vid"], e["title"], true);
         }
     }
     function deleteCurrentFavoriteList() {
@@ -643,6 +670,19 @@ body {
         let next = Object.keys(favorites)[0];
         ytFavoritesInput.value = next;
         selectFavoritesList(next);
+    }
+    function removeFavorite(entry) {
+        console.log("Removing favorite.");
+        let vid = entry.vid;
+        let fl = favorites[ytFavoritesInput.value];
+        for (let track in fl) {
+            if (fl[track].vid == vid) {
+                console.log('Found track to remove.');
+                fl.splice(track, 1);
+                saveFavorites();
+                return;
+            }
+        }
     }
     ////////////////////////////////////////////
     // Setup.
