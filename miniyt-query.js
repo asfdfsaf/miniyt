@@ -13,7 +13,7 @@ function GetJSON(url, callback) {
     request.send();
 }
 function addRelatedVideos(vid) {
-    if (vid == "") {
+    if (vid == "" || vid == undefined) {
         return;
     }
     let url = "https://www.googleapis.com/youtube/v3/search?" +
