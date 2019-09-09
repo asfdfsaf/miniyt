@@ -27,7 +27,11 @@ function tryPlayVideo(seek) {
 }
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.ENDED) {
-        dequeueVideo();
+        if (ytFavoritesInput.value == "") {
+            dequeueVideo();
+        } else {
+            playNextVideo();
+        }
     }
 }
 function seekToOffset(offset) {

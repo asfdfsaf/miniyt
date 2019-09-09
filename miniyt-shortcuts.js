@@ -54,7 +54,13 @@ document.onkeypress = function(e) {
     }
     switch(e.which || e.keyCode) {
         case "\\".charCodeAt(0): dequeueVideo(); break;
-        case "n".charCodeAt(0): dequeueVideo(); break;
+        case "n".charCodeAt(0): 
+            if (ytFavoritesInput.value == "") {
+                dequeueVideo(); 
+            } else {
+                playNextVideo();
+            }
+            break;
         case "f".charCodeAt(0): toggleFullscreen(); break;
         case "/".charCodeAt(0): ytSearch.focus(); break;
         case "[".charCodeAt(0): seekToOffset(-10.0); break;
