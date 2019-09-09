@@ -67,7 +67,7 @@ function deleteCurrentFavoriteList() {
         return;
     }
     console.log(`Deleting list ${name}.`);
-    let option = ytFavoritesList.querySelector(`option[value=${name}]`);
+    let option = ytFavoritesList.querySelector(`option[value="${name}"]`);
     if (option != undefined) {
         console.log("Found option.");
         option.parentElement.removeChild(option);
