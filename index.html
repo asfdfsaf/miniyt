@@ -176,6 +176,9 @@ body {
             this.blur();
         }
     };
+    ytFavoritesInput.onclick = function(e) {
+        this.value = "";
+    }
     ytFavoritesInput.onchange = function(e) {
         selectFavoritesList(ytFavoritesInput.value);
     }
@@ -320,7 +323,7 @@ body {
             case "s".charCodeAt(0): decreaseBrightness(); break;
             case "b".charCodeAt(0): addSelectedToFavorites(); break;
             case "t".charCodeAt(0): deleteCurrentFavoriteList(); break;
-            case "u".charCodeAt(0): ytFavoritesInput.focus(); break;
+            case "u".charCodeAt(0): ytFavoritesInput.value = ""; ytFavoritesInput.focus(); break;
         }
         return false;
     };
