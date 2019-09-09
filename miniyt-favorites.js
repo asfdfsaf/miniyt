@@ -75,9 +75,10 @@ function deleteCurrentFavoriteList() {
     
     let next = Object.keys(favorites)[0];
     ytFavoritesInput.value = next;
-    if (next != "") {
+    if (next != "" && next != undefined) {
         selectFavoritesList(next);
     } else {
+        ytFavoritesInput.value = "";
         playlist = [];
         renderPlaylist();
     }
