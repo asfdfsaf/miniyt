@@ -173,6 +173,7 @@ body {
             e.preventDefault();
             createFavoritesList(ytFavoritesInput.value);
             selectFavoritesList(ytFavoritesInput.value);    
+            this.blur();
         }
     };
     ytFavoritesInput.onchange = function(e) {
