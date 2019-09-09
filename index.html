@@ -653,6 +653,7 @@ body {
         favorites[name] = tracks;
     }
     function selectFavoritesList(name) {
+        ytFavoritesInput.blur();
         console.log(`Selected playlist: ${name}.`);
         playlist = [];
         renderPlaylist();
