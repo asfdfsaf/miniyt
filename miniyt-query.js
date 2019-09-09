@@ -13,6 +13,9 @@ function GetJSON(url, callback) {
     request.send();
 }
 function addRelatedVideos(vid) {
+    if (vid == "") {
+        return;
+    }
     let url = "https://www.googleapis.com/youtube/v3/search?" +
               "maxResults=50&part=snippet&type=video" +
               "&key=" + apiKey +
