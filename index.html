@@ -114,6 +114,11 @@ body {
     <div id="panel" class="yt-panel">
         <input id="search" value="Press ? for help." class="yt-search"/>
         <div id="player" class="yt-player"></div>
+        <!--
+        <select id="favoritesSelect"></select>
+        -->
+        <input type="text" id="favoritesInput" list="favoritesList"/>
+        <datalist id="favoritesList"></datalist>
         <div id="playlist" class="yt-playlist"></div>
     </div>
     <div id="mainview" class="yt-mainview"></div>
@@ -129,6 +134,8 @@ body {
     const ytSearch = document.getElementById("search");
     const ytMainView = document.getElementById("mainview");
     const ytPlaylist = document.getElementById("playlist");
+    const ytFavoritesInput = document.getElementById("favoritesInput")
+    const ytFavoritesList = document.getElementById("favoritesList")
 
     function showHelp() {
         alert(`
@@ -155,6 +162,17 @@ body {
     o: Open on HookTube.
     y: Open on YouTube.
     ?: Show this help.`);
+    }
+    ytFavoritesInput.onkeypress = function(e) {
+        let code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) { // Enter
+            e.preventDefault();
+            createFavoritesList(ytFavoritesInput.value);
+            selectFavoritesList(ytFavoritesInput.value);    
+        }
+    };
+    ytFavoritesInput.onchange = function(e) {
+        selectFavoritesList(ytFavoritesInput.value);
     }
     ytSearch.onkeypress = function(e) {
         let code = (e.keyCode ? e.keyCode : e.which);
@@ -249,7 +267,8 @@ body {
     }
 
     document.onkeypress = function(e) {
-        if (document.activeElement === ytSearch) {
+        if (document.activeElement === ytSearch ||
+            document.activeElement === ytFavoritesInput) {
             return; // Ignore shortcuts while search is focused.
         }
         switch(e.which || e.keyCode) {
@@ -294,6 +313,8 @@ body {
             case "a".charCodeAt(0): decreaseSaturation(); break;
             case "w".charCodeAt(0): increaseBrightness(); break;
             case "s".charCodeAt(0): decreaseBrightness(); break;
+            case "b".charCodeAt(0): addSelectedToFavorites(); break;
+            case "t".charCodeAt(0): deleteCurrentFavoriteList(); break;
         }
         return false;
     };
@@ -515,6 +536,8 @@ body {
         img.setAttribute("src", thumb);
         img.setAttribute("class", "yt-thumbnail");
         img.setAttribute("id", iid);
+        img.setAttribute("vid", vid);
+        img.setAttribute("title", title);
 
         let aid = "A_" + vid;
         let a = document.createElement("a");
@@ -546,6 +569,82 @@ body {
         addedVideos = [];
     }
     ////////////////////////////////////////////
+    // Favorites.
+    ////////////////////////////////////////////
+    var playingFavorites = false;
+    var favorites = {};
+    function loadFavorites() {
+        if (window.localStorage['favorites'] == undefined) {
+            window.localStorage['favorites'] = "{}";
+        }
+        let favorites = JSON.parse(window.localStorage['favorites']);
+        for (let f in favorites) {
+            createFavoritesList(f, favorites[f]);
+        }
+    }
+    function saveFavorites() {
+        window.localStorage['favorites'] = JSON.stringify(favorites);
+    }
+    function addFavoritesToList(favorites) {
+        for (let f in favorites) {
+            let option = document.createElement('option');
+            option.innerText = option.value = f['name'];
+            ytFavoritesSelect.appendChild(option);
+        }
+    }
+    function addSelectedToFavorites() {
+        let video = document.getElementsByClassName("yt-thumbnail")[videoSelected];
+        let vid = video.getAttribute("vid");
+        let title = video.getAttribute("title");
+        addToCurrentFavoriteList(title, vid);
+    }
+    function addToCurrentFavoriteList(title, vid) {
+        console.log('Adding to favorites.');
+        let name = ytFavoritesInput.value;
+        if (favorites[name] != undefined) {
+            let track = { vid: vid, title: title };
+            favorites[name] = favorites[name].concat(track)
+            saveFavorites();
+            console.log(`Added to playlist ${name}.`);
+            selectFavoritesList(name);
+        }
+    }
+    function createFavoritesList(name, tracks=[]) {
+        console.log(`Create favorites list: ${name}.`);
+        if (name in favorites) {
+            console.log("Playlist already exists.");
+            return;
+        }
+        let option = document.createElement('option');
+        option.innerText = option.value = name;
+        ytFavoritesList.appendChild(option);
+        favorites[name] = tracks;
+    }
+    function selectFavoritesList(name) {
+        console.log(`Selected playlist: ${name}.`);
+        playlist = [];
+        renderPlaylist();
+        for (let v in favorites[name]) {
+            let e = favorites[name][v];
+            console.log(`Adding track: ${e["vid"]} ${e["title"]}.`);
+            queueVideo(e["vid"], e["title"]);
+        }
+    }
+    function deleteCurrentFavoriteList() {
+        let name = ytFavoritesInput.value;
+        console.log(`Deleting list ${name}.`);
+        let option = ytFavoritesList.querySelector(`option[value=${name}]`);
+        if (option != undefined) {
+            console.log("Found option.");
+            option.parentElement.removeChild(option);
+        }
+        delete favorites[name];
+        saveFavorites();
+        let next = Object.keys(favorites)[0];
+        ytFavoritesInput.value = next;
+        selectFavoritesList(next);
+    }
+    ////////////////////////////////////////////
     // Setup.
     ////////////////////////////////////////////
     function configure() {
@@ -557,6 +656,7 @@ body {
     document.body.onload = function() {
         configure();
         addRelatedVideos(getVidFromUrl());
+        loadFavorites();
     }
     </script>
 </body>
