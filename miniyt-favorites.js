@@ -107,5 +107,5 @@ function sortFavorites() {
     favorites[name] = sorted;
     selectFavoritesList(name);
     saveFavorites();
-    playIndex = 0;
+    playIndex = playlist.length - 1;
 }

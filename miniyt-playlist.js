@@ -75,6 +75,7 @@ function dequeueVideo() {
     window.location.hash = "#" + vid;
     player.loadVideoById(vid);
     tryPlayVideo(playlist[playlist.length - 1]["time"]);
+    playIndex = playlist.length - 1;
     document.title = entry["title"];
 }
 function playNextVideo() {
