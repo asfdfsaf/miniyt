@@ -7,11 +7,13 @@ function renderPlaylist() {
         let p = document.createElement("p");
         p.onclick = function(e) {
             if (e.metaKey) {
-                console.log('Remove track '+i);
                 if (playlist[i].isFavorite == true) {
                     removeFavorite(playlist[i]);
-                    if (playlist.length - 1 == i) {
-                        dequeueVideo();
+                    if (playIndex == i) {
+                        playNextVideo();
+                    }
+                    if (i < playIndex) {
+                        playIndex--;
                     }
                     playlist.splice(i, 1);
                     renderPlaylist();
@@ -22,7 +24,7 @@ function renderPlaylist() {
                 } else {
                     playlist.splice(i, 1);
                     renderPlaylist();
-                }                
+                }
             } else {
                 playIndex = i;
                 let vid = playlist[i].vid;
@@ -79,7 +81,6 @@ function dequeueVideo() {
     document.title = entry["title"];
 }
 function playNextVideo() {
-    console.log('Playing next video.')
     playIndex--;
     if (playIndex < 0) {
         playIndex = playlist.length - 1;

@@ -28,20 +28,16 @@ function addSelectedToFavorites() {
     addToCurrentFavoriteList(title, vid);
 }
 function addToCurrentFavoriteList(title, vid) {
-    console.log('Adding to favorites.');
     let name = ytFavoritesInput.value;
     if (favorites[name] != undefined) {
         let track = { vid: vid, title: title };
         favorites[name] = favorites[name].concat(track)
         saveFavorites();
-        console.log(`Added to playlist ${name}.`);
         selectFavoritesList(name);
     }
 }
 function createFavoritesList(name) {
-    console.log(`Create favorites list: ${name}.`);
     if (name in favorites) {
-        console.log("Playlist already exists.");
         return;
     }
     let option = document.createElement("option");
@@ -52,24 +48,26 @@ function createFavoritesList(name) {
 }
 function selectFavoritesList(name) {
     ytFavoritesInput.blur();
-    console.log(`Selected playlist: ${name}.`);
     playlist = [];
-    renderPlaylist();
     for (let v in favorites[name]) {
         let e = favorites[name][v];
-        console.log(`Adding track: ${e["vid"]} ${e["title"]}.`);
-        queueVideo(e["vid"], e["title"], true);
+        playlist.push({
+            vid: e.vid,
+            title: e.title,
+            time: 0,
+            isFavorite: true
+        });
     }
+    playIndex = playlist.length;
+    playNextVideo();
 }
 function deleteCurrentFavoriteList() {
     let name = ytFavoritesInput.value;
     if (name == "") {
         return;
     }
-    console.log(`Deleting list ${name}.`);
     let option = ytFavoritesList.querySelector(`option[value="${name}"]`);
     if (option != undefined) {
-        console.log("Found option.");
         option.parentElement.removeChild(option);
     }
     delete favorites[name];
@@ -86,12 +84,10 @@ function deleteCurrentFavoriteList() {
     }
 }
 function removeFavorite(entry) {
-    console.log("Removing favorite.");
     let vid = entry.vid;
     let fl = favorites[ytFavoritesInput.value];
     for (let track in fl) {
         if (fl[track].vid == vid) {
-            console.log('Found track to remove.');
             fl.splice(track, 1);
             saveFavorites();
             return;
