@@ -81,6 +81,9 @@ function dequeueVideo() {
     document.title = entry["title"];
 }
 function playNextVideo() {
+    if (playlist.length == 0) {
+        return;
+    }
     playIndex--;
     if (playIndex < 0) {
         playIndex = playlist.length - 1;

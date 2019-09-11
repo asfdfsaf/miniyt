@@ -59,6 +59,7 @@ function selectFavoritesList(name) {
         });
     }
     playIndex = playlist.length;
+    renderPlaylist();
     playNextVideo();
 }
 function deleteCurrentFavoriteList() {
